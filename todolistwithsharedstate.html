@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO LIST WITH SHARED STATE</title>
+    <style>
+        .stylediv {
+            width: 200px;
+            height: 150px;
+            border: 1px solid black;
+            border-radius: 14px;
+            padding: 0px 16px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+</html>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+
+
+<script type="text/babel">
+
+    function AddTodo(props) {
+
+        return <>
+            <input type="text" onInput={props.todonameis} value={props.todoname} />
+            <button style={{ cursor: "pointer" }} onClick={props.alltodo}>Add Todo</button>
+        </>
+    }
+
+    function TodoList(props) {
+
+        return <>
+            {props.todo.map((ele, index) => {
+                return <div className="stylediv" key={index}>
+                    <h2>{ele.name}</h2>
+                    <input type="checkbox" />
+                    <button onClick={() => props.filterDelete(index)}>Delete</button>
+                </div>
+
+            })}
+
+        </>
+
+    }
+
+    function TodoApp() {
+
+        let [todoname, setTodoname] = React.useState("");
+        let [todo, setTodo] = React.useState([])
+
+
+        function todonameis(event) {
+            setTodoname(event.target.value);
+        }
+
+        function filterDelete(id) {
+            let updatedAll = todo.filter((ele, index) => {
+                if (id != index) {
+                    return ele;
+                }
+            })
+            setTodo(updatedAll);
+
+        }
+
+        function alltodo() {
+            setTodo([...todo, { name: todoname }]);
+            setTodoname("")
+        }
+
+
+
+        return <>
+            <AddTodo todoname={todoname} todonameis={todonameis} alltodo={alltodo} />
+            <TodoList todo={todo} filterDelete={filterDelete} />
+
+        </>
+    }
+
+
+
+    let dom = ReactDOM.createRoot(document.getElementById("root"));
+    dom.render(<TodoApp />);
+</script>
